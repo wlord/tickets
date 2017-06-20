@@ -1,0 +1,146 @@
+[
+  {
+    "num": "101Ш",
+    "model": 0,
+    "category": 0,
+    "travel_time": "9:36",
+    "from": {
+      "station": "Херсон",
+      "date": 1499323320,
+      "src_date": "2017-07-06 09:42:00"
+    },
+    "till": {
+      "station": "Київ-Пасажирський",
+      "date": 1499357880,
+      "src_date": "2017-07-06 19:18:00"
+    },
+    "types": [
+      {
+        "id": "Л",
+        "title": "Люкс",
+        "letter": "Л",
+        "places": 17
+      },
+      {
+        "id": "К",
+        "title": "Купе",
+        "letter": "К",
+        "places": 9
+      },
+      {
+        "id": "П",
+        "title": "Плацкарт",
+        "letter": "П",
+        "places": 33
+      }
+    ],
+    "allow_stud": 1,
+    "allow_transportation": 1,
+    "allow_booking": 1
+  },
+  {
+    "num": "283Ш",
+    "model": 0,
+    "category": 0,
+    "travel_time": "9:27",
+    "from": {
+      "station": "Херсон",
+      "date": 1499346540,
+      "src_date": "2017-07-06 16:09:00"
+    },
+    "till": {
+      "station": "Барановичи-Полесские",
+      "date": 1499380560,
+      "src_date": "2017-07-07 01:36:00"
+    },
+    "types": [
+      {
+        "id": "К",
+        "title": "Купе",
+        "letter": "К",
+        "places": 4
+      },
+      {
+        "id": "П",
+        "title": "Плацкарт",
+        "letter": "П",
+        "places": 48
+      }
+    ],
+    "allow_stud": 1,
+    "allow_transportation": 1,
+    "allow_booking": 1
+  },
+  {
+    "num": "765О",
+    "model": 0,
+    "category": 2,
+    "travel_time": "6:25",
+    "from": {
+      "station": "Херсон",
+      "date": 1499348520,
+      "src_date": "2017-07-06 16:42:00"
+    },
+    "till": {
+      "station": "Київ-Пасажирський",
+      "date": 1499371620,
+      "src_date": "2017-07-06 23:07:00"
+    },
+    "types": [
+      {
+        "id": "С1",
+        "title": "Сидячий першого класу",
+        "letter": "С1",
+        "places": 18
+      },
+      {
+        "id": "С2",
+        "title": "Сидячий другого класу",
+        "letter": "С2",
+        "places": 29
+      }
+    ],
+    "allow_stud": 1,
+    "allow_transportation": 1,
+    "allow_booking": 1
+  },
+  {
+    "num": "122Ш",
+    "model": 0,
+    "category": 0,
+    "travel_time": "10:05",
+    "from": {
+      "station": "Миколаїв Пас",
+      "date": 1499359260,
+      "src_date": "2017-07-06 19:41:00"
+    },
+    "till": {
+      "station": "Київ-Пасажирський",
+      "date": 1499395560,
+      "src_date": "2017-07-07 05:46:00"
+    },
+    "types": [
+      {
+        "id": "Л",
+        "title": "Люкс",
+        "letter": "Л",
+        "places": 25
+      },
+      {
+        "id": "К",
+        "title": "Купе",
+        "letter": "К",
+        "places": 73
+      },
+      {
+        "id": "П",
+        "title": "Плацкарт",
+        "letter": "П",
+        "places": 72
+      }
+    ],
+    "allow_stud": 1,
+    "allow_transportation": 1,
+    "allow_booking": 1
+  }
+]

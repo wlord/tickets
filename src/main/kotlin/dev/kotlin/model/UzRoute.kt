@@ -20,15 +20,22 @@ data class UzRoute(
 
 class UzRouteDeserializer : JsonDeserializer<UzRoute> {
 
-    /*enum class RouteFields(val propertyName: String, val converter: (JsonElement) -> Any) {
+    enum class RouteFields(val propertyName: String, val converter: (JsonElement) -> Any) {
         NUM("number", { jsonElement -> jsonElement.toString() }),
-        TRAVEL_TIME("travelTime", { jsonElement -> Duration.ofMinutes(jsonElement.toString().split(":").reduce { a, b -> Integer.valueOf(a) * 60 + Integer.valueOf(b) }) }),
-        FROM("from", { jsonElement -> Pair() }), TILL("to"), TYPES("availableTickets")
+        TRAVEL_TIME("travelTime", {
+            jsonElement -> java.time.Duration.ofMinutes(jsonElement.toString()
+                .split(":")
+                .map { it.toLong() }
+                .reduce { hours, minutes -> hours * 60 + minutes })
+        }),
+        FROM("from", { jsonElement -> Pair() }),
+        TILL("to"),
+        TYPES("availableTickets")
 
         fun toObject(jsonElement: JsonElement): Any {
             return converter.invoke(jsonElement)
         }
-    }*/
+    }
 
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): UzRoute {
 

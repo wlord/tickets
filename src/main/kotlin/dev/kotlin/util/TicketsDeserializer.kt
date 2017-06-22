@@ -1,10 +1,11 @@
 package dev.kotlin.util
 
 import com.google.gson.*
+import dev.kotlin.model.*
 import java.lang.reflect.Type
 
-class TicketsDeserializer<T>(val classFromMap: (Map<String, Any?>) -> T,
-                             val property: (String) -> Pair<String, Any?>) : JsonDeserializer<T> {
+open class TicketsDeserializer<T>(val classFromMap: (Map<String, Any?>) -> T,
+                                  val property: (String, JsonElement) -> Pair<String, Any?>) : JsonDeserializer<T> {
 
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): T {
         val jsonObject = json!!.asJsonObject
@@ -22,10 +23,26 @@ class TicketsDeserializer<T>(val classFromMap: (Map<String, Any?>) -> T,
             /*val field = UzResponseDeserializer.ResponseFields.valueOf(name.capitalize())
             map.put(field.propertyName, field.toObject(element))*/
 
-            val field = property(name)
+            val field = property(name, element)
             map.put(field.first, field.second)
         }
         return map
     }
-
 }
+
+object GsonHelper {
+    val gson: Gson = GsonBuilder()
+            .registerTypeAdapter(UzResponse::class.java, UzResponseDeserializer())
+            .registerTypeAdapter(UzRoute::class.java, UzRouteDeserializer())
+            .registerTypeAdapter(Station::class.java, StationDeserializer())
+            .create()
+
+    fun <T> fromJson(json: String, classOfT: Class<T>): T {
+        return gson.fromJson(json, classOfT)
+    }
+
+    fun <T> fromJson(json: String, typeOfT: Type): T {
+        return gson.fromJson(json, typeOfT)
+    }
+}
+

@@ -1,49 +1,47 @@
 package dev.kotlin.model
 
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import java.lang.reflect.Type
-import java.time.Duration
+import dev.kotlin.util.GsonHelper
+import dev.kotlin.util.TicketsDeserializer
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.temporal.TemporalAmount
-import java.util.*
+import com.google.gson.reflect.TypeToken
 
-data class UzRoute(
-        var number: String = "",
-        var travelTime: TemporalAmount = Duration.ZERO,
-        var from: Pair<Station, LocalDateTime>? = null,
-        var to: Pair<Station, LocalDateTime>? = null,
-        var availableTickets: Map<Ticket, Number> = Collections.emptyMap()
-)
+class UzRoute(map: Map<String, Any?>) {
+    val number: String by map
+    val travelTime: TemporalAmount by map
+    val from: Pair<Station, LocalDateTime> by map
+    val to: Pair<Station, LocalDateTime> by map
+    val availableTickets: Collection<AmountOfTickets> by map
+}
 
-class UzRouteDeserializer : JsonDeserializer<UzRoute> {
+class UzRouteDeserializer : TicketsDeserializer<UzRoute>({ map -> UzRoute(map) },
+        { name, element ->
+            val field = RouteFields.valueOf(name.capitalize())
+            Pair(field.propertyName, field.toObject(element))
+        })
 
-    enum class RouteFields(val propertyName: String, val converter: (JsonElement) -> Any) {
-        NUM("number", { jsonElement -> jsonElement.toString() }),
-        TRAVEL_TIME("travelTime", {
-            jsonElement -> java.time.Duration.ofMinutes(jsonElement.toString()
+
+enum class RouteFields(val propertyName: String, val converter: (JsonElement) -> Any) {
+    NUM("number", { jsonElement -> jsonElement.toString() }),
+    TRAVEL_TIME("travelTime", {
+        jsonElement ->
+        java.time.Duration.ofMinutes(jsonElement.toString()
                 .split(":")
                 .map { it.toLong() }
                 .reduce { hours, minutes -> hours * 60 + minutes })
-        }),
-        FROM("from", { jsonElement -> Pair() }),
-        TILL("to"),
-        TYPES("availableTickets")
+    }),
+    FROM("from", { jsonElement -> Pair(
+            GsonHelper.fromJson(jsonElement.toString(), Station::class.java),
+            LocalDateTime.parse(jsonElement.asJsonObject.get("src_date").toString().replace(" ", "T"))) }),
+    TILL("to", { jsonElement -> Pair(
+            GsonHelper.fromJson(jsonElement.toString(), Station::class.java),
+            LocalDateTime.parse(jsonElement.asJsonObject.get("src_date").toString().replace(" ", "T"))) }),
+    TYPES("availableTickets", { jsonElement ->
+        val type = object : TypeToken<kotlin.collections.Collection<dev.kotlin.model.AmountOfTickets>>(){}.type
+        GsonHelper.fromJson(jsonElement.toString(), type) });
 
-        fun toObject(jsonElement: JsonElement): Any {
-            return converter.invoke(jsonElement)
-        }
+    fun toObject(jsonElement: JsonElement): Any {
+        return converter.invoke(jsonElement)
     }
-
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): UzRoute {
-
-        val jsonObject = json!!.asJsonObject
-        val route = UzRoute()
-        for ((name, element) in jsonObject.entrySet().asIterable()) {
-
-        }
-    }
-
 }

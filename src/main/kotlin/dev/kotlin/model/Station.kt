@@ -1,19 +1,24 @@
 package dev.kotlin.model
 
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import java.lang.reflect.Type
+import dev.kotlin.util.TicketsDeserializer
 
 class Station(map: Map<String, Any?>) {
     val id: Number by map
     val name: String by map
 }
 
-class StationDeserializer : JsonDeserializer<Station> {
+enum class StationFields(val propertyName: String, val converter: (JsonElement) -> Any) {
+    ID("id", { jsonElement -> jsonElement.toString() }),
+    STATION("name", { jsonElement -> jsonElement.toString() });
 
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Station {
-
+    fun toObject(jsonElement: JsonElement): Any {
+        return converter.invoke(jsonElement)
     }
-
 }
+
+class StationDeserializer : TicketsDeserializer<Station>({ map -> Station(map) },
+        { name, element ->
+            val field = StationFields.valueOf(name.capitalize())
+            Pair(field.propertyName, field.toObject(element))
+        })

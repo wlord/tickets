@@ -2,8 +2,12 @@ package dev.kotlin
 
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import dev.kotlin.model.AmountOfTickets
 import dev.kotlin.model.UzResponse
 import dev.kotlin.model.UzResponseDeserializer
+import dev.kotlin.model.UzRoute
+import dev.kotlin.util.GsonHelper
 
 fun main(args: Array<String>) {
     Fuel.post("http://booking.uz.gov.ua/purchase/search/",
@@ -15,6 +19,9 @@ fun main(args: Array<String>) {
             print("Error")
         } else {
             print(uzResponse)
+            val type = object : TypeToken<Collection<UzRoute>>(){}.type
+            val route = GsonHelper.fromJson<Collection<UzRoute>>(uzResponse.value, type)
+            print(route)
         }
     }
 }

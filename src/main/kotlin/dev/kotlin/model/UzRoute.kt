@@ -17,7 +17,8 @@ class UzRoute(map: Map<String, Any?>) {
 
 class UzRouteDeserializer : TicketsDeserializer<UzRoute>({ map -> UzRoute(map) },
         { name, element ->
-            val field = RouteFields.valueOf(name.capitalize())
+            val fieldsValue = name.toUpperCase()
+            val field = RouteFields.valueOf(fieldsValue)
             Pair(field.propertyName, field.toObject(element))
         })
 

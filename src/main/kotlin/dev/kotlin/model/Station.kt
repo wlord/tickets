@@ -19,6 +19,6 @@ enum class StationFields(val propertyName: String, val converter: (JsonElement) 
 
 class StationDeserializer : TicketsDeserializer<Station>({ map -> Station(map) },
         { name, element ->
-            val field = StationFields.valueOf(name.capitalize())
+            val field = StationFields.valueOf(name.toUpperCase())
             Pair(field.propertyName, field.toObject(element))
         })

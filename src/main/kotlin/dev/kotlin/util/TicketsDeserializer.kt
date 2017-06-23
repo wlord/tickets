@@ -17,11 +17,9 @@ open class TicketsDeserializer<T>(val classFromMap: (Map<String, Any?>) -> T,
         val map = HashMap<String, Any?>()
 
         for ((name, element) in jsonObject.entrySet().asIterable()) {
-            if (element is JsonNull) {
+            /*if (element is JsonNull) {
                 continue
-            }
-            /*val field = UzResponseDeserializer.ResponseFields.valueOf(name.capitalize())
-            map.put(field.propertyName, field.toObject(element))*/
+            }*/
 
             val field = property(name, element)
             map.put(field.first, field.second)

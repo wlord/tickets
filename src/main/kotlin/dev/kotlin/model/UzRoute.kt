@@ -3,7 +3,6 @@ package dev.kotlin.model
 import com.google.gson.JsonElement
 import dev.kotlin.util.GsonHelper
 import dev.kotlin.util.TicketsDeserializer
-import java.time.LocalDateTime
 import java.time.temporal.TemporalAmount
 import com.google.gson.reflect.TypeToken
 
@@ -31,8 +30,6 @@ class UzRoute(map: Map<String, Any?>) {
             )
             """
     }
-
-
 }
 
 class UzRouteDeserializer : TicketsDeserializer<UzRoute>({ map -> UzRoute(map) },

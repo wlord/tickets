@@ -3,7 +3,6 @@ package dev.kotlin
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import dev.kotlin.model.AmountOfTickets
 import dev.kotlin.model.UzResponse
 import dev.kotlin.model.UzResponseDeserializer
 import dev.kotlin.model.UzRoute

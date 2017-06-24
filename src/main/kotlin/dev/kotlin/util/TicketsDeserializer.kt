@@ -32,7 +32,8 @@ object GsonHelper {
     val gson: Gson = GsonBuilder()
             .registerTypeAdapter(UzResponse::class.java, UzResponseDeserializer())
             .registerTypeAdapter(UzRoute::class.java, UzRouteDeserializer())
-            .registerTypeAdapter(Station::class.java, StationDeserializer())
+            .registerTypeAdapter(Endpoint::class.java, EndpointDeserializer())
+            .registerTypeAdapter(AmountOfTickets::class.java, AmountOfTicketsDeserializer())
             .create()
 
     fun <T> fromJson(json: String, classOfT: Class<T>): T {

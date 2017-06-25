@@ -25,8 +25,8 @@ abstract class TicketsDeserializer<T>(val classFromMap: (Map<String, Any?>) -> T
 
 object GsonHelper {
     val gson: Gson = GsonBuilder()
-            .registerTypeAdapter(UzResponse::class.java, UzResponseDeserializer())
-            .registerTypeAdapter(UzRoute::class.java, UzRouteDeserializer())
+            .registerTypeAdapter(Response::class.java, ResponseDeserializer())
+            .registerTypeAdapter(Route::class.java, RouteDeserializer())
             .registerTypeAdapter(Endpoint::class.java, EndpointDeserializer())
             .registerTypeAdapter(AmountOfTickets::class.java, AmountOfTicketsDeserializer())
             .create()

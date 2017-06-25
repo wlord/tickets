@@ -6,7 +6,7 @@ import dev.kotlin.util.TicketsDeserializer
 import java.time.temporal.TemporalAmount
 import com.google.gson.reflect.TypeToken
 
-class UzRoute(map: Map<String, Any?>) {
+class Route(map: Map<String, Any?>) {
     val number: String by map
     val model: Int by map
     val category: Int by map
@@ -19,7 +19,7 @@ class UzRoute(map: Map<String, Any?>) {
     val allowBooking: Boolean by map
 
     override fun toString(): String {
-        return """UzRoute(
+        return """Route(
             number = $number,
             model = $model,
             category = $category,
@@ -32,7 +32,7 @@ class UzRoute(map: Map<String, Any?>) {
     }
 }
 
-class UzRouteDeserializer : TicketsDeserializer<UzRoute>({ map -> UzRoute(map) },
+class RouteDeserializer : TicketsDeserializer<Route>({ map -> Route(map) },
         { name, element ->
             val fieldsValue = name.toUpperCase()
             val field = RouteFields.valueOf(fieldsValue)

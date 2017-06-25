@@ -18,6 +18,22 @@ class Route(map: Map<String, Any?>) {
     val allowTransportation: Boolean by map
     val allowBooking: Boolean by map
 
+    override fun equals(other: Any?): Boolean {
+        if (other !is Route) {
+            return false
+        }
+        return number == other.number && model == other.model && category == other.category
+                && travelTime == other.travelTime && from == other.from && to == other.to
+                && availableTickets == other.availableTickets && allowStudentDiscount == other.allowStudentDiscount
+                && allowTransportation == other.allowTransportation && allowBooking == other.allowBooking
+    }
+
+    override fun hashCode(): Int {
+        return number.hashCode() + model.hashCode() + category.hashCode() + travelTime.hashCode() + from.hashCode() +
+                to.hashCode() + availableTickets.hashCode() + allowStudentDiscount.hashCode() +
+                allowTransportation.hashCode() + allowBooking.hashCode()
+    }
+
     override fun toString(): String {
         return """Route(
             number = $number,
@@ -41,7 +57,7 @@ class RouteDeserializer : TicketsDeserializer<Route>({ map -> Route(map) },
 
 
 enum class RouteFields(val propertyName: String, val converter: (JsonElement) -> Any) {
-    NUM("number", { jsonElement -> jsonElement.toString() }),
+    NUM("number", { jsonElement -> jsonElement.asString }),
     MODEL("model", { jsonElement -> jsonElement.asInt }),
     CATEGORY("category", { jsonElement -> jsonElement.asInt }),
     TRAVEL_TIME("travelTime", {
@@ -54,11 +70,11 @@ enum class RouteFields(val propertyName: String, val converter: (JsonElement) ->
     FROM("from", { jsonElement -> GsonHelper.fromJson(jsonElement.toString(), Endpoint::class.java) }),
     TILL("to", { jsonElement -> GsonHelper.fromJson(jsonElement.toString(), Endpoint::class.java) }),
     TYPES("availableTickets", { jsonElement ->
-        val type = object : TypeToken<kotlin.collections.Collection<dev.kotlin.model.AmountOfTickets>>(){}.type
+        val type = object : TypeToken<Collection<AmountOfTickets>>(){}.type
         GsonHelper.fromJson(jsonElement.toString(), type) }),
     ALLOW_STUD("allowStudentDiscount", { jsonElement -> jsonElement.asInt != 0 }),
     ALLOW_TRANSPORTATION("allowTransportation", { jsonElement -> jsonElement.asInt != 0 }),
-    ALLOW_BOOKING("allowBooking", { jsonElement -> jsonElement.asInt!= 0 });
+    ALLOW_BOOKING("allowBooking", { jsonElement -> jsonElement.asInt != 0 });
 
     fun toObject(jsonElement: JsonElement): Any {
         return converter.invoke(jsonElement)

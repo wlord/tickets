@@ -1,0 +1,27 @@
+{
+  "num": "770К",
+  "model": 0,
+  "category": 0,
+  "travel_time": "3:32",
+  "from": {
+    "station": "Кам`янець-Подільський",
+    "date": 1499219760,
+    "src_date": "2017-07-05 04:56:00"
+  },
+  "till": {
+    "station": "Київ-Пасажирський",
+    "date": 1499232480,
+    "src_date": "2017-07-05 08:28:00"
+  },
+  "types": [
+    {
+      "id": "С3",
+      "title": "Сидячий третього класу",
+      "letter": "С3",
+      "places": 37
+    }
+  ],
+  "allow_stud": 1,
+  "allow_transportation": 1,
+  "allow_booking": 1
+}

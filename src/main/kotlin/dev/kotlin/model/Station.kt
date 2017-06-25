@@ -17,12 +17,23 @@ class Endpoint(map: Map<String, Any?>) {
             )
             """
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is Endpoint) {
+            return false
+        }
+        return station == other.station && date == other.date
+    }
+
+    override fun hashCode(): Int {
+        return station.hashCode() + date.hashCode()
+    }
 }
 
 enum class StationFields(val propertyName: String, val converter: (JsonElement) -> Any) {
     DATE("timeInSeconds", { jsonElement -> jsonElement.asLong }),
     SRC_DATE("date", { jsonElement -> LocalDateTime.parse(jsonElement.asString.replace(" ", "T")) }),
-    STATION("name", { jsonElement -> jsonElement.toString() });
+    STATION("name", { jsonElement -> jsonElement.asString });
 
     fun toObject(jsonElement: JsonElement): Any {
         return converter.invoke(jsonElement)

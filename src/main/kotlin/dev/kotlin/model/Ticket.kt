@@ -1,7 +1,6 @@
 package dev.kotlin.model
 
 import com.google.gson.JsonElement
-import dev.kotlin.model.AmountOfTicketsFields.*
 import dev.kotlin.util.TicketsDeserializer
 
 data class Ticket(val type: String, val title: String)
@@ -16,6 +15,17 @@ class AmountOfTickets(map: Map<String, Any?>) {
             amount = $amount
             )
             """
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is AmountOfTickets) {
+            return false
+        }
+        return ticket == other.ticket && amount == other.amount
+    }
+
+    override fun hashCode(): Int {
+        return ticket.hashCode() + amount.hashCode()
     }
 }
 

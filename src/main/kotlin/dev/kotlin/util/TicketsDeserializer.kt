@@ -24,12 +24,15 @@ abstract class TicketsDeserializer<T>(val classFromMap: (Map<String, Any?>) -> T
 }
 
 object GsonHelper {
-    val gson: Gson = GsonBuilder()
+    val gson: Gson by lazy(LazyThreadSafetyMode.NONE) {
+        GsonBuilder()
             .registerTypeAdapter(Response::class.java, ResponseDeserializer())
             .registerTypeAdapter(Route::class.java, RouteDeserializer())
             .registerTypeAdapter(Endpoint::class.java, EndpointDeserializer())
             .registerTypeAdapter(AmountOfTickets::class.java, AmountOfTicketsDeserializer())
+            .registerTypeAdapter(Station::class.java, StationDeserializer())
             .create()
+    }
 
     fun <T> fromJson(json: String, classOfT: Class<T>): T {
         return gson.fromJson(json, classOfT)

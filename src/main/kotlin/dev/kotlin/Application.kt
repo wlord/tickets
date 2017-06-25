@@ -1,30 +1,72 @@
 package dev.kotlin
 
-import com.github.kittinunf.fuel.Fuel
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import dev.kotlin.model.Response
-import dev.kotlin.model.ResponseDeserializer
+import dev.kotlin.api.UzApi
+import dev.kotlin.model.RouteRequest
 import dev.kotlin.model.Route
+import dev.kotlin.model.Station
+import dev.kotlin.model.StationRequest
 import dev.kotlin.util.GsonHelper
+import dev.kotlin.util.PropertiesLoader
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
+
+val DATE_FORMAT: DateTimeFormatter = DateTimeFormatterBuilder()
+        .appendValue(ChronoField.DAY_OF_MONTH, 2)
+        .appendLiteral('.')
+        .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+        .appendLiteral('.')
+        .appendValue(ChronoField.YEAR, 4)
+        .toFormatter()
 
 fun main(args: Array<String>) {
-    Fuel.post("http://booking.uz.gov.ua/purchase/search/",
-            listOf("station_id_from" to "2200270", "station_id_till" to "220001", "date_dep" to "05.07.2017", "time_dep" to "00:00")
-    ).header(mapOf("Content-Type" to "application/x-www-form-urlencoded", "Accept" to "application/json")).response { _, response, _ ->
-        val uzResponse = GsonBuilder().registerTypeAdapter(Response::class.java, ResponseDeserializer()).create().fromJson(String(response.data), Response::class.java)
-        if (uzResponse.error) {
-            print(uzResponse)
-            print("Error")
-        } else {
-            print(uzResponse)
-            val type = object : TypeToken<Collection<Route>>() {}.type
-            try {
-                val route = GsonHelper.fromJson<Collection<Route>>(uzResponse.value, type)
-                print(route)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+
+    val prop = PropertiesLoader().properties
+    prop.forEach { key, value -> println("key=$key, value=$value") }
+
+    val fromStationRequest = StationRequest(
+            baseUrl = prop.getProperty("request.baseurl"),
+            searchTerm = "Київ"
+    )
+
+    var from: Station
+    var to: Station
+    UzApi().getStation(fromStationRequest) { station ->
+        from = station
     }
+
+    val toStationRequest = StationRequest(
+            baseUrl = prop.getProperty("request.baseurl"),
+            searchTerm = "Київ"
+    )
+    UzApi().getStation(toStationRequest) { station ->
+        to = station
+    }
+
+    /*val request = RouteRequest(
+            baseUrl = prop.getProperty("request.baseurl"),
+            from = Station(mapOf("id" to prop.getProperty("request.station.from.id").toInt())),
+            to = Station(mapOf("id" to prop.getProperty("request.station.to.id").toInt())),
+            departureDate = LocalDateTime.of(
+                    LocalDate.parse(prop.getProperty("request.departure.date"), DATE_FORMAT),
+                    LocalTime.parse(prop.getProperty("request.departure.time"))
+            )
+    )
+
+    print(request)
+
+    UzApi().getRoutes(request) { response ->
+        print(response)
+        val type = object : TypeToken<Collection<Route>>() {}.type
+        try {
+            val route = GsonHelper.fromJson<Collection<Route>>(response.value, type)
+            print(route)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }*/
 }

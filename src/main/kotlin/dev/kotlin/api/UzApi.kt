@@ -13,7 +13,7 @@ import java.io.Serializable
 class UzApi {
 
     fun getRoutes(routeRequest: RouteRequest, callback: (Response) -> Unit) {
-        Fuel.post(routeRequest.baseUrl + "search/", paramsFromRequest(routeRequest))
+        Fuel.post(routeRequest.url + "search/", paramsFromRequest(routeRequest))
                 .header(mapOf("Content-Type" to "application/x-www-form-urlencoded", "Accept" to "application/json"))
                 .response { _, response, _ ->
                     val uzResponse = GsonHelper.fromJson(String(response.data), Response::class.java)
@@ -27,7 +27,7 @@ class UzApi {
     }
 
     fun getStation(stationRequest: StationRequest, callback: (Station) -> Unit) {
-        Fuel.get(stationRequest.baseUrl + "station/", listOf("term" to stationRequest.searchTerm))
+        Fuel.get(stationRequest.url, listOf("term" to stationRequest.searchTerm))
                 .response {_, response, _ ->
                     print(response.data)
                     try {

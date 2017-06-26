@@ -2,12 +2,12 @@ package dev.kotlin
 
 import com.google.gson.reflect.TypeToken
 import dev.kotlin.api.UzApi
-import dev.kotlin.model.RouteRequest
 import dev.kotlin.model.Route
+import dev.kotlin.model.RouteRequest
 import dev.kotlin.model.Station
 import dev.kotlin.model.StationRequest
+import dev.kotlin.util.Configuration
 import dev.kotlin.util.GsonHelper
-import dev.kotlin.util.PropertiesLoader
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -25,37 +25,13 @@ val DATE_FORMAT: DateTimeFormatter = DateTimeFormatterBuilder()
 
 fun main(args: Array<String>) {
 
-    val prop = PropertiesLoader().properties
-    prop.forEach { key, value -> println("key=$key, value=$value") }
+    val config = Configuration()
+    val uzApi = UzApi()
 
-    val fromStationRequest = StationRequest(
-            baseUrl = prop.getProperty("request.baseurl"),
-            searchTerm = "Київ"
-    )
+    val from = getStation(config.fromStation(), config.baseUrl() + "station/", uzApi)
+    val to = getStation(config.toStation(), config.baseUrl() + "station/", uzApi)
 
-    var from: Station
-    var to: Station
-    UzApi().getStation(fromStationRequest) { station ->
-        from = station
-    }
-
-    val toStationRequest = StationRequest(
-            baseUrl = prop.getProperty("request.baseurl"),
-            searchTerm = "Київ"
-    )
-    UzApi().getStation(toStationRequest) { station ->
-        to = station
-    }
-
-    /*val request = RouteRequest(
-            baseUrl = prop.getProperty("request.baseurl"),
-            from = Station(mapOf("id" to prop.getProperty("request.station.from.id").toInt())),
-            to = Station(mapOf("id" to prop.getProperty("request.station.to.id").toInt())),
-            departureDate = LocalDateTime.of(
-                    LocalDate.parse(prop.getProperty("request.departure.date"), DATE_FORMAT),
-                    LocalTime.parse(prop.getProperty("request.departure.time"))
-            )
-    )
+    val request = RouteRequest(config, from, to)
 
     print(request)
 
@@ -68,5 +44,19 @@ fun main(args: Array<String>) {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }*/
+    }
+}
+
+private fun getStation(stationFromConfig: Station, url: String, uzApi: UzApi): Station {
+    var stationToReturn = stationFromConfig
+    if (stationFromConfig.id.toInt() != 0) {
+        val fromStationRequest = StationRequest(
+                url = url,
+                searchTerm = stationFromConfig.name
+        )
+        uzApi.getStation(fromStationRequest) { station ->
+            stationToReturn = station
+        }
+    }
+    return stationToReturn
 }

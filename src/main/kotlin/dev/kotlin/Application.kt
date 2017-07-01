@@ -8,12 +8,10 @@ import dev.kotlin.model.Station
 import dev.kotlin.model.StationRequest
 import dev.kotlin.util.Configuration
 import dev.kotlin.util.GsonHelper
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
+import java.util.*
 
 val DATE_FORMAT: DateTimeFormatter = DateTimeFormatterBuilder()
         .appendValue(ChronoField.DAY_OF_MONTH, 2)
@@ -35,16 +33,21 @@ fun main(args: Array<String>) {
 
     print(request)
 
-    UzApi().getRoutes(request) { response ->
-        print(response)
-        val type = object : TypeToken<Collection<Route>>() {}.type
-        try {
-            val route = GsonHelper.fromJson<Collection<Route>>(response.value, type)
-            print(route)
-        } catch (e: Exception) {
-            e.printStackTrace()
+    Timer().schedule(object : TimerTask() {
+        override fun run() {
+            uzApi.getRoutes(request) { response ->
+                print(response)
+                val type = object : TypeToken<Collection<Route>>() {}.type
+                try {
+                    val route = GsonHelper.fromJson<Collection<Route>>(response.value, type)
+                    print(route)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
         }
-    }
+
+    }, 0, 30000)
 }
 
 private fun getStation(stationFromConfig: Station, url: String, uzApi: UzApi): Station {

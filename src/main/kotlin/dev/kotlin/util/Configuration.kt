@@ -23,9 +23,9 @@ class Configuration(path: String = "/application.properties") {
     fun fromStation(): Station {
         return Station(mapOf(
                 "id" to if (properties.getProperty(STATION_FROM_ID.key).isNotBlank())
-                    properties.getProperty(STATION_FROM_ID.key) else "",
+                    properties.getProperty(STATION_FROM_ID.key).toInt() else 0,
                 "name" to if (properties.getProperty(STATION_FROM_NAME.key).isNotBlank())
-                    properties.getProperty(STATION_FROM_NAME.key).toInt() else 0,
+                    properties.getProperty(STATION_FROM_NAME.key) else "",
                 "region" to ""
         ))
     }
@@ -33,9 +33,9 @@ class Configuration(path: String = "/application.properties") {
     fun toStation(): Station {
         return Station(mapOf(
                 "id" to if (properties.getProperty(STATION_TO_ID.key).isNotBlank())
-                    properties.getProperty(STATION_TO_ID.key) else "",
+                    properties.getProperty(STATION_TO_ID.key).toInt() else 0,
                 "name" to if (properties.getProperty(STATION_TO_NAME.key).isNotBlank())
-                    properties.getProperty(STATION_TO_NAME.key).toInt() else 0,
+                    properties.getProperty(STATION_TO_NAME.key) else "",
                 "region" to ""
         ))
     }

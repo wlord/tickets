@@ -17,6 +17,7 @@ class Route(map: Map<String, Any?>) {
     val allowStudentDiscount: Boolean by map
     val allowTransportation: Boolean by map
     val allowBooking: Boolean by map
+    val allowRoundtrip: Boolean by map
 
     override fun equals(other: Any?): Boolean {
         if (other !is Route) {
@@ -26,6 +27,7 @@ class Route(map: Map<String, Any?>) {
                 && travelTime == other.travelTime && from == other.from && to == other.to
                 && availableTickets == other.availableTickets && allowStudentDiscount == other.allowStudentDiscount
                 && allowTransportation == other.allowTransportation && allowBooking == other.allowBooking
+                && allowRoundtrip == other.allowRoundtrip
     }
 
     override fun hashCode(): Int {
@@ -74,7 +76,8 @@ enum class RouteFields(val propertyName: String, val converter: (JsonElement) ->
         GsonHelper.fromJson(jsonElement.toString(), type) }),
     ALLOW_STUD("allowStudentDiscount", { jsonElement -> jsonElement.asInt != 0 }),
     ALLOW_TRANSPORTATION("allowTransportation", { jsonElement -> jsonElement.asInt != 0 }),
-    ALLOW_BOOKING("allowBooking", { jsonElement -> jsonElement.asInt != 0 });
+    ALLOW_BOOKING("allowBooking", { jsonElement -> jsonElement.asInt != 0 }),
+    ALLOW_ROUNDTRIP("allowRoundtrip", { jsonElement -> jsonElement.asInt != 0 });
 
     fun toObject(jsonElement: JsonElement): Any {
         return converter.invoke(jsonElement)
